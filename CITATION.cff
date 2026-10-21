@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "fedlab-repro: FedAvg, FedProx and SCAFFOLD under non-IID data, with sample-level and user-level differential privacy, on Flower"
+authors:
+  - family-names: Khoshbakht
+    given-names: Amirhossein
+version: 0.1.0
+date-released: 2026-10-22
+license: MIT
+repository-code: "https://github.com/amirhosseinkho/fedlab-repro"
+keywords:
+  - federated learning
+  - differential privacy
+  - non-IID
+  - Flower
+  - SCAFFOLD

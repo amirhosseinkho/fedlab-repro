@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
+    env:
+      FEDLAB_DATA: ${{ github.workspace }}/data
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install (CPU build of the pinned torch, then the rest)
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch==2.11.0 torchvision==0.26.0 --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
+          pip install -e . --no-deps
+      - uses: actions/cache@v4
+        with:
+          path: data
+          key: mnist-${{ hashFiles('src/fedlab/data.py') }}
+      - name: Lint
+        run: |
+          ruff check .
+          ruff format --check .
+      - name: Data (MNIST only)
+        run: python experiments/prepare_data.py mnist
+      - name: Unit tests
+        run: pytest -q
+      - name: Experiments in quick mode (MNIST, CPU)
+        run: |
+          python experiments/run_e1.py --quick
+          python experiments/run_e2.py --quick
+          python experiments/run_e3.py --quick
+          python experiments/aggregate.py --quick
+          python experiments/plots.py --quick
