@@ -1,0 +1,58 @@
+# E3: accuracy vs communication vs privacy on CIFAR-10, alpha = 0.5.
+# Seed 0 runs every point. Seeds 1 and 2 are added afterwards for the points on
+# the Pareto fronts (experiments/run_e3.py --front), see docs/decisions.md.
+seeds: [0]
+
+base:
+  dataset: cifar10
+  partition: dirichlet
+  alpha: 0.5
+  num_clients: 100
+  rounds: 100
+  batch_size: 50
+  lr: 0.1                # winner of the 30-round lr pilot on seed 100 (D19)
+  mu: 0.01
+  eval_every: 5
+  device: cuda
+
+groups:
+  # Communication knobs, no DP.
+  - name: nodp
+    grid:
+      algorithm: [fedavg, fedprox, scaffold]
+      local_epochs: [1, 5]
+      fraction: [0.05, 0.1, 0.2]
+
+  # User-level central DP (DP-FedAvg with Flower's server-side fixed clipping).
+  # z in {0, 0.5, 1.0, 1.5} is the planned grid; 0.1, 0.2 and 0.3 were added
+  # after the phase-3 pilot showed learning collapses between 0.1 and 0.5.
+  - name: central
+    set:
+      algorithm: fedavg
+      local_epochs: 1
+      central_dp_clip: 0.5   # about the median client update norm at E = 1 (D20)
+    grid:
+      central_dp_noise: [0.0, 0.1, 0.2, 0.3, 0.5, 1.0, 1.5]
+      fraction: [0.05, 0.1, 0.2]
+
+  # Sample-level DP (DP-SGD in every client with Opacus).
+  - name: dpsgd
+    set:
+      algorithm: fedavg
+      local_epochs: 1
+      dpsgd_clip: 1.0
+    grid:
+      dpsgd_noise: [0.5, 1.0, 1.5]
+      fraction: [0.05, 0.1, 0.2]
+
+quick:
+  seeds: [0]
+  set:
+    dataset: mnist
+    num_clients: 10
+    rounds: 2
+    batch_size: 32
+    eval_every: 2
+    max_train: 2000
+    max_test: 1000
+    device: cpu

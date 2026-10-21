@@ -1,0 +1,46 @@
+# E1: reproduction of FedAvg, FedProx and SCAFFOLD under non-IID data.
+# CIFAR-10 with Dirichlet label skew, FEMNIST with its natural writer split.
+seeds: [0, 1, 2]
+
+base:
+  dataset: cifar10
+  partition: dirichlet
+  num_clients: 100
+  fraction: 0.1          # 10 clients per round
+  rounds: 200
+  local_epochs: 2
+  batch_size: 50
+  lr: 0.1                # winner of the 30-round lr pilot on seed 100 (D19)
+  mu: 0.01               # FedProx; from the paper's grid {0.001, 0.01, 0.1, 1}, not tuned
+  eval_every: 5
+  device: cuda
+
+groups:
+  - name: cifar10
+    grid:
+      alpha: [0.1, 0.5]
+      algorithm: [fedavg, fedprox, scaffold]
+  - name: femnist
+    skip_in_quick: true   # in --quick, MNIST stands in for both datasets
+    set:
+      dataset: femnist
+      partition: natural   # 100 writers, fixed subset (D7)
+      alpha: null
+      batch_size: 20
+    grid:
+      algorithm: [fedavg, fedprox, scaffold]
+
+quick:
+  seeds: [0]
+  set:
+    dataset: mnist
+    num_clients: 10
+    fraction: 0.5
+    rounds: 5
+    local_epochs: 1
+    batch_size: 32
+    lr: 0.1
+    eval_every: 1
+    max_train: 12000
+    max_test: 2000
+    device: cpu
