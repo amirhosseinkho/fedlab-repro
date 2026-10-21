@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import functools
 import logging
 import platform
 import time
@@ -28,7 +29,7 @@ from fedlab.comm import CommLog
 from fedlab.data import FederatedData, build_federated_data
 from fedlab.grid import SequentialGrid
 from fedlab.models import build_model, num_params
-from fedlab.privacy import DELTA, central_epsilon, flower_accountant
+from fedlab.privacy import DELTA, central_epsilon, flower_accountant, sample_level_epsilon
 from fedlab.strategies import Scaffold
 from fedlab.utils import get_device, set_global_seed, write_json
 
@@ -71,6 +72,19 @@ def evaluate(model: torch.nn.Module, data: FederatedData) -> tuple[float, float]
         correct += int((out.argmax(1) == yb).sum())
         n += len(yb)
     return correct / n, loss / n
+
+
+@functools.cache
+def _epsilon_of(history: tuple[tuple[float, float, int], ...]) -> float:
+    return sample_level_epsilon(list(history), DELTA)
+
+
+def client_epsilons(log: list[dict[str, Any]]) -> dict[int, float]:
+    """Current sample-level epsilon of every client that has trained so far."""
+    last: dict[int, tuple] = {}
+    for rec in log:
+        last[rec["client"]] = rec["dp_history"]
+    return {c: _epsilon_of(h) for c, h in last.items()}
 
 
 def build_strategy(cfg: dict[str, Any], num_sampled: int, total_examples: int) -> Strategy:
@@ -197,9 +211,7 @@ def run_on_data(
                     z, server_round, num_sampled, n_clients, s
                 )
         if cfg["dpsgd_noise"] is not None and settings.log:
-            last: dict[int, float] = {}
-            for rec in settings.log:
-                last[rec["client"]] = rec["epsilon"]
+            last = client_epsilons(settings.log)
             row["eps_sample_max"] = max(last.values())
             row["eps_sample_mean_participants"] = float(np.mean(list(last.values())))
         history.append(row)
@@ -227,7 +239,8 @@ def run_on_data(
         "config": cfg,
         "history": history,
         "final_acc": history[-1]["acc"],
-        "final_acc_last3": float(np.mean([h["acc"] for h in history[-3:]])),
+        # mean of the last three evaluations after training started (never round 0)
+        "final_acc_last3": float(np.mean([h["acc"] for h in history if h["round"] > 0][-3:])),
         "total_bytes_raw": comm.total("raw"),
         "total_bytes_serialized": comm.total("serialized"),
         "comm_per_round": comm.per_round(),
@@ -246,19 +259,28 @@ def run_on_data(
             "opacus": opacus.__version__,
         },
     }
+    norms_by_round: dict[int, list[float]] = {}
+    for rec in settings.log:
+        norms_by_round.setdefault(rec["round"], []).append(rec["update-norm"])
+    all_norms = [v for vs in norms_by_round.values() for v in vs]
+    if all_norms:
+        result["update_norm"] = {
+            "median_per_round": [
+                float(np.median(norms_by_round[r])) for r in sorted(norms_by_round)
+            ],
+            "quantiles_10_50_90": [float(q) for q in np.quantile(all_norms, [0.1, 0.5, 0.9])],
+        }
     if isinstance(strategy, DifferentialPrivacyServerSideFixedClipping):
         spent = strategy.privacy_spent()
         result["flower_accountant_epsilon"] = None if spent is None else spent.epsilon
         result["delta"] = DELTA
     if cfg["dpsgd_noise"] is not None:
-        last = {}
-        for rec in settings.log:
-            last[rec["client"]] = rec["epsilon"]
-        result["eps_sample_per_client"] = last
+        result["eps_sample_per_client"] = client_epsilons(settings.log)
         result["delta"] = DELTA
     if return_arrays:
         result["initial_arrays"] = initial
         result["final_arrays"] = final["arrays"]
         result["grid"] = grid
         result["strategy"] = strategy
+        result["client_log"] = settings.log
     return result

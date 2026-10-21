@@ -30,7 +30,6 @@ from flwr.clientapp import ClientApp
 
 from fedlab.data import FederatedData
 from fedlab.models import build_model
-from fedlab.privacy import DELTA, sample_level_epsilon
 from fedlab.utils import derive_seed
 
 SCAFFOLD_C = "scaffold-c"
@@ -80,10 +79,9 @@ def make_client_app(
         extra: dict[str, float] = {}
 
         if settings.dpsgd_noise is not None:
-            y, steps, loss, eps = _train_dpsgd(
+            y, steps, loss, hist = _train_dpsgd(
                 data, pid, x, settings, gen, context, device, server_round, model_fn
             )
-            extra["epsilon"] = eps
             reply = RecordDict({"arrays": _record(y)})
         else:
             mu = float(cfg.get("proximal-mu", 0.0))
@@ -106,12 +104,18 @@ def make_client_app(
                 context.state[SCAFFOLD_CI] = _record(ci_new)
                 reply[SCAFFOLD_DC] = _record({k: ci_new[k] - ci[k] for k in x})
 
+        # L2 norm of the (unclipped) model update, used to choose the central-DP clip.
+        extra["update-norm"] = float(
+            torch.sqrt(sum(((y[k] - x[k]).double() ** 2).sum() for k in x)).item()
+        )
         reply["metrics"] = MetricRecord(
             {"num-examples": n, "dp-weight": 1.0, "train-loss": loss, "steps": steps, **extra}
         )
-        settings.log.append(
-            {"round": server_round, "client": pid, "n": n, "steps": steps, "loss": loss, **extra}
-        )
+        rec = {"round": server_round, "client": pid, "n": n, "steps": steps, "loss": loss, **extra}
+        if settings.dpsgd_noise is not None:
+            # epsilon is computed from this history at evaluation time (runner)
+            rec["dp_history"] = tuple(hist)
+        settings.log.append(rec)
         return Message(reply, reply_to=msg)
 
     return app
@@ -162,18 +166,26 @@ def _train_dpsgd(
     device: torch.device,
     server_round: int,
     model_fn: Callable[[], torch.nn.Module],
-) -> tuple[dict[str, torch.Tensor], int, float, float]:
+) -> tuple[dict[str, torch.Tensor], int, float, list[tuple[float, float, int]]]:
+    """DP-SGD with Opacus's clipping, noise and RDP accountant.
+
+    ``make_private`` wraps the model and optimizer and registers the accountant
+    hook with ``sample_rate = 1 / len(loader)``. Batches are drawn here on the
+    device with the same rule as Opacus's ``UniformWithReplacementSampler``
+    (each sample independently with probability ``sample_rate``,
+    ``int(1 / sample_rate)`` batches per epoch), which avoids a per-item
+    DataLoader over GPU tensors.
+    """
     from opacus import PrivacyEngine
 
     assert settings.algorithm == "fedavg", "DP-SGD is only combined with FedAvg here"
     model = model_fn().to(device)
     model.load_state_dict(x)
     xs, ys = data.client_tensors(pid)
+    n = len(ys)
+    # Only its length matters: it sets Opacus's sample rate 1 / len(loader).
     loader = torch.utils.data.DataLoader(
-        torch.utils.data.TensorDataset(xs.cpu(), ys.cpu()),
-        batch_size=settings.batch_size,
-        shuffle=True,
-        generator=gen,
+        torch.utils.data.TensorDataset(torch.arange(n)), batch_size=settings.batch_size
     )
     opt = torch.optim.SGD(model.parameters(), lr=settings.lr)
     engine = PrivacyEngine(accountant="rdp")
@@ -186,7 +198,7 @@ def _train_dpsgd(
     noise_gen = torch.Generator(device=device).manual_seed(
         derive_seed(settings.seed, "dpnoise", pid, server_round)
     )
-    dp_model, dp_opt, dp_loader = engine.make_private(
+    dp_model, dp_opt, _ = engine.make_private(
         module=model,
         optimizer=opt,
         data_loader=loader,
@@ -195,11 +207,15 @@ def _train_dpsgd(
         poisson_sampling=True,
         noise_generator=noise_gen,
     )
+    sample_rate = 1 / len(loader)
+    batches_per_epoch = int(1 / sample_rate)
     dp_model.train()
     total, seen, steps = 0.0, 0, 0
     for _ in range(settings.local_epochs):
-        for xb, yb in dp_loader:
-            xb, yb = xb.to(device), yb.to(device)
+        for _ in range(batches_per_epoch):
+            mask = torch.rand(n, generator=gen) < sample_rate
+            b = mask.nonzero(as_tuple=False).reshape(-1).to(device)
+            xb, yb = xs[b], ys[b]
             dp_opt.zero_grad(set_to_none=True)
             out = dp_model(data.augment(xb, gen))
             if len(yb) == 0:
@@ -212,17 +228,16 @@ def _train_dpsgd(
             loss.backward()
             dp_opt.step()
             steps += 1
-    hist = engine.accountant.history
+    hist = [(float(z), float(q), int(k)) for z, q, k in engine.accountant.history]
     context.state[DPSGD_HISTORY] = ConfigRecord(
         {
-            "noise": [float(h[0]) for h in hist],
-            "rate": [float(h[1]) for h in hist],
-            "steps": [int(h[2]) for h in hist],
+            "noise": [h[0] for h in hist],
+            "rate": [h[1] for h in hist],
+            "steps": [h[2] for h in hist],
         }
     )
-    eps = sample_level_epsilon(hist, DELTA)
     y = OrderedDict((k, v.detach().clone()) for k, v in dp_model._module.state_dict().items())
-    return y, steps, total / max(seen, 1), eps
+    return y, steps, total / max(seen, 1), hist
 
 
 def numpy_state(record: ArrayRecord) -> dict[str, np.ndarray]:
