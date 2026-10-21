@@ -95,6 +95,7 @@ def test_scaffold_control_variates_follow_paper(tiny_cfg) -> None:
     data = synthetic_data([5, 3], seed=3)
     lr, rounds = 0.5, 2
     cfg = {**tiny_cfg, "algorithm": "scaffold", "rounds": rounds, "batch_size": 8, "lr": lr}
+    cfg["scaffold_weighted"] = False  # Algorithm 1 exactly as written
     res = run_on_data(cfg, data, CPU, model_fn=lambda: Tiny(zero=True), return_arrays=True)
 
     feats = [
@@ -134,6 +135,21 @@ def test_scaffold_control_variates_follow_paper(tiny_cfg) -> None:
         ctx = res["grid"].contexts[res["grid"].get_node_ids()[i]]
         stored = _arrays(ctx.state["scaffold-ci"])
         np.testing.assert_allclose(stored["fc.weight"], ci[i][0], atol=1e-5)
+
+
+def test_weighted_scaffold_equals_paper_for_equal_client_sizes(tiny_cfg) -> None:
+    data = synthetic_data([6, 6, 6, 6])
+    cfg = {**tiny_cfg, "algorithm": "scaffold", "rounds": 3, "fraction": 0.5, "batch_size": 4}
+    a = run_on_data(
+        {**cfg, "scaffold_weighted": False}, data, CPU, lambda: Tiny(), return_arrays=True
+    )
+    b = run_on_data(
+        {**cfg, "scaffold_weighted": True}, data, CPU, lambda: Tiny(), return_arrays=True
+    )
+    for k, v in _arrays(a["final_arrays"]).items():
+        np.testing.assert_allclose(_arrays(b["final_arrays"])[k], v, rtol=0, atol=1e-7)
+    for k, v in _arrays(a["strategy"].c).items():
+        np.testing.assert_allclose(_arrays(b["strategy"].c)[k], v, rtol=0, atol=1e-7)
 
 
 @pytest.mark.parametrize("algorithm, factor", [("fedavg", 1), ("scaffold", 2)])

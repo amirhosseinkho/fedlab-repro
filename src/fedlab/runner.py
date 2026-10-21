@@ -45,6 +45,9 @@ DEFAULTS: dict[str, Any] = {
     "algorithm": "fedavg",
     "mu": 0.0,
     "server_lr": 1.0,
+    # Size-weighted SCAFFOLD (docs/decisions.md D12); False = Algorithm 1 as written.
+    "scaffold_weighted": True,
+    "uniform_weights": False,  # FedAvg/FedProx: average clients with equal weights
     "central_dp_noise": None,  # None = no central DP; 0.0 = clipping only
     "central_dp_clip": 1.0,
     "dpsgd_noise": None,  # None = no sample-level DP
@@ -70,7 +73,7 @@ def evaluate(model: torch.nn.Module, data: FederatedData) -> tuple[float, float]
     return correct / n, loss / n
 
 
-def build_strategy(cfg: dict[str, Any], num_sampled: int) -> Strategy:
+def build_strategy(cfg: dict[str, Any], num_sampled: int, total_examples: int) -> Strategy:
     central = cfg["central_dp_noise"] is not None
     kw: dict[str, Any] = {
         "fraction_train": cfg["fraction"],
@@ -78,7 +81,7 @@ def build_strategy(cfg: dict[str, Any], num_sampled: int) -> Strategy:
         "min_train_nodes": 1,
         "min_available_nodes": cfg["num_clients"],
         # DP-FedAvg averages clipped updates uniformly (equal client weights).
-        "weighted_by_key": "dp-weight" if central else "num-examples",
+        "weighted_by_key": "dp-weight" if central or cfg["uniform_weights"] else "num-examples",
     }
     algo = cfg["algorithm"]
     strategy: Strategy
@@ -87,7 +90,11 @@ def build_strategy(cfg: dict[str, Any], num_sampled: int) -> Strategy:
     elif algo == "fedprox":
         strategy = FedProx(proximal_mu=cfg["mu"], **kw)
     elif algo == "scaffold":
-        strategy = Scaffold(server_lr=cfg["server_lr"], **kw)
+        strategy = Scaffold(
+            server_lr=cfg["server_lr"],
+            total_examples=total_examples if cfg["scaffold_weighted"] else None,
+            **kw,
+        )
     else:
         raise ValueError(algo)
     if central:
@@ -159,7 +166,8 @@ def run_on_data(
     )
     comm = CommLog()
     grid = SequentialGrid(make_client_app(data, settings, device, model_fn), n_clients, comm)
-    strategy = build_strategy(cfg, num_sampled)
+    total_examples = sum(data.client_size(i) for i in range(n_clients))
+    strategy = build_strategy(cfg, num_sampled, total_examples)
     model = model_fn().to(device)
     eval_model = model_fn().to(device)
     initial = ArrayRecord({k: Array(v.cpu().numpy()) for k, v in model.state_dict().items()})

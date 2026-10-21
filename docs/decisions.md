@@ -78,13 +78,37 @@ docstring example adds `(mu/2) * ||w - w_t||` (not squared). This repo uses
 `(mu/2) * ||w - w_t||^2`, which is Eq. (2) of Li et al. (2020). A unit test
 checks the resulting gradient.
 
-**D12. SCAFFOLD aggregation.** Written as a subclass of Flower's `FedAvg`
-(sampling and message construction inherited). The server update follows
-Algorithm 1: `x += eta_g * mean_i(y_i - x)` with an unweighted mean over the
-sampled clients, and `c += (1/N) * sum_i delta c_i`. FedAvg in Flower weights
-by the number of examples; SCAFFOLD here does not, as in the paper. `eta_g = 1`.
-Option II is used for the client control variate, with `K` the actual number of
-local steps the client took.
+**D12. SCAFFOLD aggregation is size-weighted (deviation from Algorithm 1).**
+SCAFFOLD is a subclass of Flower's `FedAvg` (sampling and message construction
+inherited). Algorithm 1 averages the sampled clients with equal weights,
+`x += eta_g * mean_i(y_i - x)` and `c += (1/N) * sum_i delta c_i`. In the
+phase-2 check (CIFAR-10, alpha = 0.1, 100 clients, 10% sampled, E = 2, 60
+rounds, seed 0) that version ended below FedAvg (mean of the last three
+evaluations 0.321 vs 0.367). A full-participation diagnostic (10 clients,
+alpha = 0.1, E = 1, 30 rounds) separated the cause:
+
+| run (results/phase_checks/) | last-3 accuracy |
+|---|---|
+| FedAvg, size-weighted (Flower default) | 0.611 |
+| FedAvg, uniform weights | 0.543 |
+| SCAFFOLD, uniform (Algorithm 1 as written) | 0.444 |
+| SCAFFOLD, size-weighted x and c | 0.620 |
+
+The client sizes in that run range from 796 to 13,568, so the number of local
+steps K_i ranges from 16 to 272. Averaging equally weighted clients that take
+very different numbers of steps optimises a different objective than the
+size-weighted one that the balanced test set corresponds to, and the uniform
+control variate keeps pulling the clients towards it. The repo therefore uses
+weights p_i = n_i / n for both updates:
+`x += eta_g * sum_{i in S} (n_i / n_S) (y_i - x)` and
+`c += sum_{i in S} p_i * delta c_i`. With equal client sizes this is exactly
+Algorithm 1 (unit test `test_weighted_scaffold_equals_paper_for_equal_client_sizes`),
+and the hand-computed test checks the unweighted version against the paper's
+equations. With the weighted version the phase-2 check gave 0.384 vs FedAvg's
+0.367. The server needs the total number of training examples `n`; in this
+simulation it is known exactly. Option II is used for the client control
+variate, with `K` the actual number of local steps the client took;
+`eta_g = 1`.
 
 **D13. SCAFFOLD replies carry two ArrayRecords.** Flower's
 `validate_message_reply_consistency` requires exactly one ArrayRecord, so the

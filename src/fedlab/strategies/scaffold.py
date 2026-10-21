@@ -27,9 +27,26 @@ from fedlab.clients import SCAFFOLD_C, SCAFFOLD_DC
 
 
 class Scaffold(FedAvg):
-    def __init__(self, *, server_lr: float = 1.0, **kwargs) -> None:
+    def __init__(
+        self,
+        *,
+        server_lr: float = 1.0,
+        total_examples: int | None = None,
+        **kwargs,
+    ) -> None:
+        """``total_examples=None`` is Algorithm 1 as written (every client has
+        weight 1/N). With ``total_examples`` the federation objective is the
+        size-weighted one that FedAvg optimises, sum_i p_i f_i with
+        p_i = n_i / total_examples, and both updates use p_i:
+
+            x <- x + eta_g * sum_{i in S} (n_i / sum_{j in S} n_j) (y_i - x)
+            c <- c + sum_{i in S} p_i * delta c_i
+
+        which reduces to the paper's updates when all p_i = 1/N.
+        """
         super().__init__(**kwargs)
         self.server_lr = server_lr
+        self.total_examples = total_examples
         self.c: ArrayRecord | None = None
         self._x: ArrayRecord | None = None
         self._num_nodes = 0
@@ -60,15 +77,23 @@ class Scaffold(FedAvg):
         c = {k: v.numpy() for k, v in self.c.items()}
         dy = {k: np.zeros_like(v) for k, v in x.items()}
         dc = {k: np.zeros_like(v) for k, v in x.items()}
-        for msg in valid:
+        if self.total_examples is None:
+            x_w = [1.0 / len(valid)] * len(valid)
+            c_w = [1.0 / self._num_nodes] * len(valid)
+        else:
+            sizes = [
+                float(next(iter(m.content.metric_records.values()))["num-examples"]) for m in valid
+            ]
+            x_w = [n / sum(sizes) for n in sizes]
+            c_w = [n / self.total_examples for n in sizes]
+        for msg, wx, wc in zip(valid, x_w, c_w, strict=True):
             y_i = msg.content["arrays"]
             dc_i = msg.content[SCAFFOLD_DC]
             for k in x:
-                dy[k] += y_i[k].numpy() - x[k]
-                dc[k] += dc_i[k].numpy()
-        m = len(valid)
-        new_x = {k: x[k] + self.server_lr * dy[k] / m for k in x}
-        new_c = {k: c[k] + dc[k] / self._num_nodes for k in c}
+                dy[k] += wx * (y_i[k].numpy() - x[k])
+                dc[k] += wc * dc_i[k].numpy()
+        new_x = {k: x[k] + self.server_lr * dy[k] for k in x}
+        new_c = {k: c[k] + dc[k] for k in c}
         self.c = ArrayRecord({k: Array(v.astype(c[k].dtype)) for k, v in new_c.items()})
         metrics = self.train_metrics_aggr_fn([msg.content for msg in valid], self.weighted_by_key)
         return ArrayRecord({k: Array(v.astype(x[k].dtype)) for k, v in new_x.items()}), metrics
