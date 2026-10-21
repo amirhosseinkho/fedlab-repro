@@ -230,9 +230,9 @@ class FederatedData:
         ix = torch.as_tensor(self.client_indices[cid])
         n = len(ix)
         for _ in range(epochs):
-            perm = ix[torch.randperm(n, generator=gen)]
+            perm = ix[torch.randperm(n, generator=gen)].to(self.x_train.device)
             for s in range(0, n, batch_size):
-                b = perm[s : s + batch_size].to(self.x_train.device)
+                b = perm[s : s + batch_size]
                 yield self.augment(self.x_train[b], gen), self.y_train[b]
 
     def augment(self, xb: torch.Tensor, gen: torch.Generator) -> torch.Tensor:
