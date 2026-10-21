@@ -145,3 +145,46 @@ per-sample clipping. Each client's accountant history is saved in its
 `context.state` and restored when it is sampled again, so its epsilon covers
 all rounds it took part in. The Opacus noise generator is seeded per client and
 round. DP-SGD is combined with FedAvg only.
+
+## Found while building
+
+**D21. Near-equal minibatches.** Local epochs are split into
+`ceil(n / B)` batches whose sizes differ by at most one, instead of full
+batches of B plus a remainder. In a 5-round MNIST check (alpha = 100, nearly
+IID) one client with 1,154 samples (= 36 x 32 + 2) ended its epoch with a
+2-sample batch: loss 5.27, gradient norm 50.9 against about 2 for the full
+batches, and its update norm jumped from 0.42 to 2.51. Averaging that update
+dropped global accuracy from 93.3% to 56.5% in one round. With near-equal
+batches every sample is still used once per epoch and the same run reaches
+95.4%. (These figures are from a development log, not a file in
+`results/`; the old batching code no longer exists.) All runs in `results/`
+use near-equal batches; the pilot runs made before the fix were discarded and
+repeated with `experiments/phase_checks.py`.
+
+**D22. DP-SGD batches are drawn on the GPU.** Opacus's `make_private` still
+wraps the model and optimizer and attaches the RDP accountant with
+`sample_rate = 1 / len(loader)`; the batches are drawn with the same rule as
+Opacus's `UniformWithReplacementSampler` (each example independently with
+probability `sample_rate`, `int(1 / sample_rate)` batches per epoch) but on
+device tensors, which cut the cost of a DP-SGD round on CIFAR-10 from about
+11 s to about 3 s in development timing (not a file in `results/`). The epsilon of each client is computed from its accountant
+history at evaluation time (cached), not after every local update.
+
+**D23. GPU runs are not bitwise reproducible.** The CIFAR-10 model's
+`LocalResponseNorm` uses `avg_pool3d`, whose CUDA backward pass has no
+deterministic implementation (PyTorch warns about it under
+`use_deterministic_algorithms(True, warn_only=True)`). Every seed is fixed, the
+CPU path is bitwise reproducible (`tests/test_determinism.py`), but repeating a
+CIFAR-10 run on the GPU can differ in the last digits.
+
+**D24. Final accuracy excludes round 0.** "Final accuracy" is the mean of the
+last three evaluations after round 0, so short runs never average in the
+untrained model.
+
+**D25. Quick mode.** `--quick` replaces the dataset by the first 12,000 MNIST
+training images (2,000 test images in E1/E2; 2,000/1,000 in E3), 10 clients,
+CPU, and a few rounds. E1/E2 quick runs use lr 0.1 so that FedAvg passes the
+phase-1 acceptance check (>= 95% on the full MNIST test set in 5 rounds:
+`results/phase_checks/phase1_mnist_quick_fedavg_s0.json`). In quick mode the
+FEMNIST group of E1 is skipped (MNIST stands in for both datasets).
+Quick-mode numbers are smoke tests and never reported.
