@@ -224,15 +224,20 @@ class FederatedData:
     def train_batches(self, cid: int, batch_size: int, epochs: int, gen: torch.Generator):
         """Yield shuffled, augmented minibatches of client ``cid``.
 
+        Each epoch is split into ``ceil(n / batch_size)`` batches of nearly equal
+        size (sizes differ by at most one) instead of full batches plus a short
+        remainder: a remainder of one or two samples, stepped with the same
+        learning rate, can dominate a client's update (docs/decisions.md D21).
+
         All randomness comes from ``gen`` (a CPU generator), so the batch order
         and augmentation are identical on CPU and GPU for the same seed.
         """
         ix = torch.as_tensor(self.client_indices[cid])
         n = len(ix)
+        num_batches = -(-n // batch_size)
         for _ in range(epochs):
             perm = ix[torch.randperm(n, generator=gen)].to(self.x_train.device)
-            for s in range(0, n, batch_size):
-                b = perm[s : s + batch_size]
+            for b in torch.tensor_split(perm, num_batches):
                 yield self.augment(self.x_train[b], gen), self.y_train[b]
 
     def augment(self, xb: torch.Tensor, gen: torch.Generator) -> torch.Tensor:
