@@ -1,0 +1,91 @@
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+25 passed, 7 warnings in 30.19s
+All checks passed!
+25 files already formatted
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+cifar10__alpha0p1_algorithmfedavg: 2.10 s/round, eval 0.00 s -> 21.3 min
+cifar10__alpha0p1_algorithmfedprox: 2.73 s/round, eval 0.00 s -> 27.5 min
+cifar10__alpha0p1_algorithmscaffold: 2.36 s/round, eval 0.00 s -> 23.9 min
+cifar10__alpha0p5_algorithmfedavg: 2.13 s/round, eval 0.00 s -> 21.5 min
+cifar10__alpha0p5_algorithmfedprox: 3.08 s/round, eval 0.00 s -> 31.0 min
+cifar10__alpha0p5_algorithmscaffold: 2.36 s/round, eval 0.00 s -> 23.7 min
+
+Generating partition_id_to_indices: 0it [00:00, ?it/s]
+Generating partition_id_to_indices: 184836it [00:00, 1848220.75it/s]
+Generating partition_id_to_indices: 384040it [00:00, 1932742.88it/s]
+Generating partition_id_to_indices: 577315it [00:00, 1819577.40it/s]
+Generating partition_id_to_indices: 773613it [00:00, 1874118.13it/s]Generating partition_id_to_indices: 814277it [00:00, 1878293.38it/s]
+femnist__algorithmfedavg: 1.47 s/round, eval 0.00 s -> 16.0 min
+
+Generating partition_id_to_indices: 0it [00:00, ?it/s]
+Generating partition_id_to_indices: 180818it [00:00, 1808086.89it/s]
+Generating partition_id_to_indices: 389613it [00:00, 1972671.13it/s]
+Generating partition_id_to_indices: 586881it [00:00, 1904436.84it/s]
+Generating partition_id_to_indices: 790503it [00:00, 1955328.50it/s]Generating partition_id_to_indices: 814277it [00:00, 1943653.24it/s]
+femnist__algorithmfedprox: 1.84 s/round, eval 0.00 s -> 19.6 min
+
+Generating partition_id_to_indices: 0it [00:00, ?it/s]
+Generating partition_id_to_indices: 191862it [00:00, 1918544.07it/s]
+Generating partition_id_to_indices: 410803it [00:00, 2077840.57it/s]
+Generating partition_id_to_indices: 618588it [00:00, 1979899.26it/s]Generating partition_id_to_indices: 814277it [00:00, 2029299.51it/s]
+femnist__algorithmscaffold: 2.59 s/round, eval 0.00 s -> 27.1 min
+projected total: 3.53 h
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+cifar10__alpha1p0_algorithmfedavg: 2.13 s/round, eval 0.00 s -> 21.6 min
+cifar10__alpha1p0_algorithmscaffold: 2.51 s/round, eval 0.00 s -> 25.3 min
+cifar10__alpha100p0_algorithmfedavg: 2.00 s/round, eval 0.00 s -> 20.2 min
+cifar10__alpha100p0_algorithmscaffold: 2.27 s/round, eval 0.00 s -> 22.9 min
+projected total: 1.50 h
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+nodp__algorithmfedavg_local_epochs1_fraction0p05: 0.87 s/round, eval 0.00 s -> 1.5 min
+nodp__algorithmfedavg_local_epochs1_fraction0p1: 1.20 s/round, eval 0.00 s -> 2.1 min
+nodp__algorithmfedavg_local_epochs1_fraction0p2: 2.22 s/round, eval 0.00 s -> 3.8 min
+nodp__algorithmfedavg_local_epochs5_fraction0p05: 2.53 s/round, eval 0.00 s -> 4.3 min
+nodp__algorithmfedavg_local_epochs5_fraction0p1: 4.62 s/round, eval 0.00 s -> 7.8 min
+nodp__algorithmfedavg_local_epochs5_fraction0p2: 8.47 s/round, eval 0.00 s -> 14.2 min
+nodp__algorithmfedprox_local_epochs1_fraction0p05: 0.96 s/round, eval 0.00 s -> 1.7 min
+nodp__algorithmfedprox_local_epochs1_fraction0p1: 1.69 s/round, eval 0.00 s -> 2.9 min
+nodp__algorithmfedprox_local_epochs1_fraction0p2: 3.00 s/round, eval 0.00 s -> 5.1 min
+nodp__algorithmfedprox_local_epochs5_fraction0p05: 3.26 s/round, eval 0.00 s -> 5.5 min
+nodp__algorithmfedprox_local_epochs5_fraction0p1: 6.48 s/round, eval 0.00 s -> 10.8 min
+nodp__algorithmfedprox_local_epochs5_fraction0p2: 11.72 s/round, eval 0.00 s -> 19.6 min
+nodp__algorithmscaffold_local_epochs1_fraction0p05: 0.91 s/round, eval 0.00 s -> 1.6 min
+nodp__algorithmscaffold_local_epochs1_fraction0p1: 1.55 s/round, eval 0.00 s -> 2.6 min
+nodp__algorithmscaffold_local_epochs1_fraction0p2: 2.73 s/round, eval 0.00 s -> 4.6 min
+nodp__algorithmscaffold_local_epochs5_fraction0p05: 2.57 s/round, eval 0.00 s -> 4.3 min
+nodp__algorithmscaffold_local_epochs5_fraction0p1: 5.03 s/round, eval 0.00 s -> 8.4 min
+nodp__algorithmscaffold_local_epochs5_fraction0p2: 8.99 s/round, eval 0.00 s -> 15.0 min
+central__central_dp_noise0p0_fraction0p05: 0.88 s/round, eval 0.00 s -> 1.5 min
+central__central_dp_noise0p0_fraction0p1: 1.43 s/round, eval 0.00 s -> 2.4 min
+central__central_dp_noise0p0_fraction0p2: 2.42 s/round, eval 0.00 s -> 4.1 min
+central__central_dp_noise0p1_fraction0p05: 1.03 s/round, eval 0.00 s -> 1.8 min
+central__central_dp_noise0p1_fraction0p1: 1.43 s/round, eval 0.00 s -> 2.4 min
+central__central_dp_noise0p1_fraction0p2: 2.40 s/round, eval 0.00 s -> 4.1 min
+central__central_dp_noise0p2_fraction0p05: 0.90 s/round, eval 0.00 s -> 1.6 min
+central__central_dp_noise0p2_fraction0p1: 1.44 s/round, eval 0.00 s -> 2.5 min
+central__central_dp_noise0p2_fraction0p2: 2.40 s/round, eval 0.00 s -> 4.1 min
+central__central_dp_noise0p3_fraction0p05: 0.87 s/round, eval 0.00 s -> 1.5 min
+central__central_dp_noise0p3_fraction0p1: 1.43 s/round, eval 0.00 s -> 2.4 min
+central__central_dp_noise0p3_fraction0p2: 2.56 s/round, eval 0.00 s -> 4.3 min
+central__central_dp_noise0p5_fraction0p05: 0.94 s/round, eval 0.00 s -> 1.6 min
+central__central_dp_noise0p5_fraction0p1: 1.45 s/round, eval 0.00 s -> 2.5 min
+central__central_dp_noise0p5_fraction0p2: 2.38 s/round, eval 0.00 s -> 4.0 min
+central__central_dp_noise1p0_fraction0p05: 0.89 s/round, eval 0.00 s -> 1.5 min
+central__central_dp_noise1p0_fraction0p1: 1.49 s/round, eval 0.00 s -> 2.5 min
+central__central_dp_noise1p0_fraction0p2: 2.41 s/round, eval 0.00 s -> 4.1 min
+central__central_dp_noise1p5_fraction0p05: 0.87 s/round, eval 0.00 s -> 1.5 min
+central__central_dp_noise1p5_fraction0p1: 1.58 s/round, eval 0.00 s -> 2.7 min
+central__central_dp_noise1p5_fraction0p2: 2.44 s/round, eval 0.00 s -> 4.1 min
+.venv\Lib\site-packages\opacus\privacy_engine.py:98: UserWarning: Secure RNG turned off. This is perfectly fine for experimentation as it allows for much faster training performance, but remember to turn it on and retrain one last time before production with ``secure_mode`` turned on.
+<sys>:0: UserWarning: Full backward hook is firing when gradients are computed with respect to module outputs since no inputs require gradients. See https://docs.pytorch.org/docs/main/generated/torch.nn.Module.html#torch.nn.Module.register_full_backward_hook for more details.
+dpsgd__dpsgd_noise0p5_fraction0p05: 1.76 s/round, eval 0.00 s -> 3.0 min
+dpsgd__dpsgd_noise0p5_fraction0p1: 2.91 s/round, eval 0.00 s -> 4.9 min
+dpsgd__dpsgd_noise0p5_fraction0p2: 5.20 s/round, eval 0.00 s -> 8.7 min
+dpsgd__dpsgd_noise1p0_fraction0p05: 1.67 s/round, eval 0.00 s -> 2.8 min
+dpsgd__dpsgd_noise1p0_fraction0p1: 2.99 s/round, eval 0.00 s -> 5.0 min
+dpsgd__dpsgd_noise1p0_fraction0p2: 5.13 s/round, eval 0.00 s -> 8.6 min
+dpsgd__dpsgd_noise1p5_fraction0p05: 1.64 s/round, eval 0.00 s -> 2.8 min
+dpsgd__dpsgd_noise1p5_fraction0p1: 2.94 s/round, eval 0.00 s -> 5.0 min
+dpsgd__dpsgd_noise1p5_fraction0p2: 5.01 s/round, eval 0.00 s -> 8.4 min
+projected total: 3.70 h

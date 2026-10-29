@@ -1,0 +1,163 @@
+{
+ "config": {
+  "dataset": "mnist",
+  "partition": "dirichlet",
+  "alpha": 0.5,
+  "num_clients": 10,
+  "fraction": 0.5,
+  "rounds": 5,
+  "local_epochs": 1,
+  "batch_size": 32,
+  "lr": 0.1,
+  "algorithm": "fedavg",
+  "mu": 0.01,
+  "server_lr": 1.0,
+  "scaffold_weighted": true,
+  "uniform_weights": false,
+  "central_dp_noise": null,
+  "central_dp_clip": 1.0,
+  "dpsgd_noise": null,
+  "dpsgd_clip": 1.0,
+  "eval_every": 1,
+  "seed": 0,
+  "device": "cpu",
+  "max_train": 12000,
+  "max_test": null,
+  "femnist_subset_seed": 0
+ },
+ "history": [
+  {
+   "round": 0,
+   "acc": 0.0989,
+   "loss": 2.3113555908203125,
+   "bytes_up": 0,
+   "bytes_down": 0,
+   "time": 1.760582447052002
+  },
+  {
+   "round": 1,
+   "acc": 0.6836,
+   "loss": 1.2835662109375,
+   "bytes_up": 33267400,
+   "bytes_down": 33267400,
+   "time": 6.594290256500244
+  },
+  {
+   "round": 2,
+   "acc": 0.836,
+   "loss": 0.5011830474853516,
+   "bytes_up": 66534800,
+   "bytes_down": 66534800,
+   "time": 11.519558429718018
+  },
+  {
+   "round": 3,
+   "acc": 0.8562,
+   "loss": 0.3442075729370117,
+   "bytes_up": 99802200,
+   "bytes_down": 99802200,
+   "time": 15.999909400939941
+  },
+  {
+   "round": 4,
+   "acc": 0.9478,
+   "loss": 0.1903652328491211,
+   "bytes_up": 133069600,
+   "bytes_down": 133069600,
+   "time": 20.4661283493042
+  },
+  {
+   "round": 5,
+   "acc": 0.9593,
+   "loss": 0.13291595497131348,
+   "bytes_up": 166337000,
+   "bytes_down": 166337000,
+   "time": 25.207953691482544
+  }
+ ],
+ "final_acc": 0.9593,
+ "final_acc_last3": 0.9211,
+ "total_bytes_raw": 332674000,
+ "total_bytes_serialized": 332729200,
+ "comm_per_round": [
+  {
+   "round": 1,
+   "down_raw": 33267400,
+   "up_raw": 33267400,
+   "down_serialized": 33272920,
+   "up_serialized": 33272920,
+   "messages": 5
+  },
+  {
+   "round": 2,
+   "down_raw": 33267400,
+   "up_raw": 33267400,
+   "down_serialized": 33272920,
+   "up_serialized": 33272920,
+   "messages": 5
+  },
+  {
+   "round": 3,
+   "down_raw": 33267400,
+   "up_raw": 33267400,
+   "down_serialized": 33272920,
+   "up_serialized": 33272920,
+   "messages": 5
+  },
+  {
+   "round": 4,
+   "down_raw": 33267400,
+   "up_raw": 33267400,
+   "down_serialized": 33272920,
+   "up_serialized": 33272920,
+   "messages": 5
+  },
+  {
+   "round": 5,
+   "down_raw": 33267400,
+   "up_raw": 33267400,
+   "down_serialized": 33272920,
+   "up_serialized": 33272920,
+   "messages": 5
+  }
+ ],
+ "num_params": 1663370,
+ "num_sampled": 5,
+ "client_sizes": [
+  250,
+  1293,
+  1373,
+  1527,
+  1856,
+  1282,
+  1468,
+  621,
+  1340,
+  990
+ ],
+ "wall_seconds": 25.2084858417511,
+ "eval_seconds": 0.0,
+ "evals": 6,
+ "device": "cpu",
+ "versions": {
+  "python": "3.13.3",
+  "torch": "2.11.0+cu128",
+  "flwr": "1.41.0",
+  "opacus": "1.6.0"
+ },
+ "update_norm": {
+  "median_per_round": [
+   2.405631124327673,
+   1.475047117104528,
+   1.0542162003336564,
+   0.6842743804152978,
+   0.7423138632345634
+  ],
+  "quantiles_10_50_90": [
+   0.5913009850889202,
+   1.0319203765909757,
+   2.2601385685124464
+  ]
+ },
+ "data_seconds": 2.1108145713806152
+}

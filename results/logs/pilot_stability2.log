@@ -1,0 +1,22 @@
+W1029 15:22:33.277000 20920 Lib\site-packages\torch\distributed\elastic\multiprocessing\redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+WARNING :   fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+10/29/2026 15:22:41:WARNING:fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+.venv\Lib\site-packages\torch\autograd\graph.py:869: UserWarning: avg_pool3d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\aten\src\ATen\Context.cpp:164.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+scaffold_e3_E5_frac0p2_lr0p03_s100: [0.1, 0.401, 0.502, 0.559, 0.599] last3=0.5534 {} 356s
+
+Generating partition_id_to_indices: 0it [00:00, ?it/s]
+Generating partition_id_to_indices: 189844it [00:00, 1898328.66it/s]
+Generating partition_id_to_indices: 390743it [00:00, 1963354.26it/s]
+Generating partition_id_to_indices: 587079it [00:00, 1695246.49it/s]
+Generating partition_id_to_indices: 765482it [00:00, 1727213.04it/s]
+Generating partition_id_to_indices: 814277it [00:00, 1775823.17it/s]
+WARNING :   fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+10/29/2026 15:29:02:WARNING:fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+femnist_scaffold_lr0p05_s100: [0.005, 0.642, 0.72, 0.763, 0.773, 0.788, 0.794] last3=0.7849 {} 148s
+WARNING :   fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+10/29/2026 15:31:33:WARNING:fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+phase3_update_norms_E1_s100: [0.1, 0.218, 0.273] last3=0.2455 {} 21s
+WARNING :   fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+10/29/2026 15:31:57:WARNING:fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+phase3_update_norms_E5_s100: [0.1, 0.346, 0.44] last3=0.3932 {} 84s

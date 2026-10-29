@@ -1,0 +1,396 @@
+{
+ "config": {
+  "dataset": "cifar10",
+  "partition": "dirichlet",
+  "alpha": 0.1,
+  "num_clients": 10,
+  "fraction": 1.0,
+  "rounds": 30,
+  "local_epochs": 1,
+  "batch_size": 50,
+  "lr": 0.05,
+  "algorithm": "fedavg",
+  "mu": 0.0,
+  "server_lr": 1.0,
+  "scaffold_weighted": true,
+  "uniform_weights": false,
+  "central_dp_noise": null,
+  "central_dp_clip": 1.0,
+  "dpsgd_noise": null,
+  "dpsgd_clip": 1.0,
+  "eval_every": 5,
+  "seed": 0,
+  "device": "cuda",
+  "max_train": null,
+  "max_test": null,
+  "femnist_subset_seed": 0
+ },
+ "history": [
+  {
+   "round": 0,
+   "acc": 0.1,
+   "loss": 2.303548974609375,
+   "bytes_up": 0,
+   "bytes_down": 0,
+   "time": 0.6394784450531006
+  },
+  {
+   "round": 5,
+   "acc": 0.3547,
+   "loss": 1.7800259765625,
+   "bytes_up": 213659600,
+   "bytes_down": 213659600,
+   "time": 39.71051335334778
+  },
+  {
+   "round": 10,
+   "acc": 0.4519,
+   "loss": 1.475127587890625,
+   "bytes_up": 427319200,
+   "bytes_down": 427319200,
+   "time": 79.20969271659851
+  },
+  {
+   "round": 15,
+   "acc": 0.5255,
+   "loss": 1.2933868286132812,
+   "bytes_up": 640978800,
+   "bytes_down": 640978800,
+   "time": 118.86960530281067
+  },
+  {
+   "round": 20,
+   "acc": 0.5718,
+   "loss": 1.1836363647460937,
+   "bytes_up": 854638400,
+   "bytes_down": 854638400,
+   "time": 157.6261305809021
+  },
+  {
+   "round": 25,
+   "acc": 0.6268,
+   "loss": 1.050711669921875,
+   "bytes_up": 1068298000,
+   "bytes_down": 1068298000,
+   "time": 196.71437454223633
+  },
+  {
+   "round": 30,
+   "acc": 0.643,
+   "loss": 1.0090760009765625,
+   "bytes_up": 1281957600,
+   "bytes_down": 1281957600,
+   "time": 235.04974174499512
+  }
+ ],
+ "final_acc": 0.643,
+ "final_acc_last3": 0.6138666666666667,
+ "total_bytes_raw": 2563915200,
+ "total_bytes_serialized": 2564742000,
+ "comm_per_round": [
+  {
+   "round": 1,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 2,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 3,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 4,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 5,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 6,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 7,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 8,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 9,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 10,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 11,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 12,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 13,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 14,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 15,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 16,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 17,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 18,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 19,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 20,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 21,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 22,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 23,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 24,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 25,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 26,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 27,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 28,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 29,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  },
+  {
+   "round": 30,
+   "down_raw": 42731920,
+   "up_raw": 42731920,
+   "down_serialized": 42745700,
+   "up_serialized": 42745700,
+   "messages": 10
+  }
+ ],
+ "num_params": 1068298,
+ "num_sampled": 10,
+ "client_sizes": [
+  3366,
+  4532,
+  13568,
+  912,
+  5417,
+  3170,
+  10769,
+  874,
+  6596,
+  796
+ ],
+ "wall_seconds": 235.05092978477478,
+ "eval_seconds": 0.0,
+ "evals": 7,
+ "device": "cuda (NVIDIA GeForce GTX 1650 Ti)",
+ "versions": {
+  "python": "3.13.3",
+  "torch": "2.11.0+cu128",
+  "flwr": "1.41.0",
+  "opacus": "1.6.0"
+ },
+ "update_norm": {
+  "median_per_round": [
+   0.9565951670522643,
+   0.9243669332620097,
+   0.9187620866479946,
+   0.8726018239201591,
+   0.8989325679215638,
+   0.8949085334665677,
+   0.8992943038809538,
+   0.8846562189674301,
+   0.8919344699898706,
+   0.8790913103881415,
+   0.9017913780751681,
+   0.8603162801350099,
+   0.854413466158024,
+   0.875033902386734,
+   0.8817831865368118,
+   0.8332576579926454,
+   0.8646867300596972,
+   0.8613032697851752,
+   0.877112730817462,
+   0.8606420393557386,
+   0.8654451129855314,
+   0.9174768739383445,
+   0.8819869486899987,
+   0.8714189749123995,
+   0.8830232682825663,
+   0.9008697399971132,
+   0.9417574293026771,
+   0.9149673481903067,
+   0.9095015635703948,
+   0.9036479035381073
+  ],
+  "quantiles_10_50_90": [
+   0.5232674193201012,
+   0.8781925664290127,
+   1.450484151938781
+  ]
+ },
+ "data_seconds": 3.742875337600708
+}

@@ -1,0 +1,756 @@
+{
+ "config": {
+  "dataset": "femnist",
+  "partition": "natural",
+  "alpha": null,
+  "num_clients": 100,
+  "fraction": 0.1,
+  "rounds": 60,
+  "local_epochs": 2,
+  "batch_size": 20,
+  "lr": 0.05,
+  "algorithm": "scaffold",
+  "mu": 0.0,
+  "server_lr": 1.0,
+  "scaffold_weighted": true,
+  "uniform_weights": false,
+  "central_dp_noise": null,
+  "central_dp_clip": 1.0,
+  "dpsgd_noise": null,
+  "dpsgd_clip": 1.0,
+  "eval_every": 10,
+  "seed": 100,
+  "device": "cuda",
+  "max_train": null,
+  "max_test": null,
+  "femnist_subset_seed": 0
+ },
+ "history": [
+  {
+   "round": 0,
+   "acc": 0.004915102770330653,
+   "loss": 4.138845053392398,
+   "bytes_up": 0,
+   "bytes_down": 0,
+   "time": 0.5494294166564941
+  },
+  {
+   "round": 10,
+   "acc": 0.6420911528150134,
+   "loss": 1.339970265679108,
+   "bytes_up": 5282968000,
+   "bytes_down": 5282968000,
+   "time": 24.344524383544922
+  },
+  {
+   "round": 20,
+   "acc": 0.7198391420911529,
+   "loss": 0.9849987967510752,
+   "bytes_up": 10565936000,
+   "bytes_down": 10565936000,
+   "time": 49.402104139328
+  },
+  {
+   "round": 30,
+   "acc": 0.7627345844504021,
+   "loss": 0.7885650075685775,
+   "bytes_up": 15848904000,
+   "bytes_down": 15848904000,
+   "time": 74.54620695114136
+  },
+  {
+   "round": 40,
+   "acc": 0.7725647899910635,
+   "loss": 0.7032268207130739,
+   "bytes_up": 21131872000,
+   "bytes_down": 21131872000,
+   "time": 99.28853154182434
+  },
+  {
+   "round": 50,
+   "acc": 0.7882037533512064,
+   "loss": 0.6645214500120434,
+   "bytes_up": 26414840000,
+   "bytes_down": 26414840000,
+   "time": 123.76162600517273
+  },
+  {
+   "round": 60,
+   "acc": 0.7940125111706882,
+   "loss": 0.656283981145973,
+   "bytes_up": 31697808000,
+   "bytes_down": 31697808000,
+   "time": 147.7857220172882
+  }
+ ],
+ "final_acc": 0.7940125111706882,
+ "final_acc_last3": 0.7849270181709859,
+ "total_bytes_raw": 63395616000,
+ "total_bytes_serialized": 63398265600,
+ "comm_per_round": [
+  {
+   "round": 1,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 2,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 3,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 4,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 5,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 6,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 7,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 8,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 9,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 10,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 11,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 12,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 13,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 14,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 15,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 16,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 17,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 18,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 19,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 20,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 21,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 22,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 23,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 24,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 25,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 26,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 27,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 28,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 29,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 30,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 31,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 32,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 33,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 34,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 35,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 36,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 37,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 38,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 39,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 40,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 41,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 42,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 43,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 44,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 45,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 46,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 47,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 48,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 49,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 50,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 51,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 52,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 53,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 54,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 55,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 56,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 57,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 58,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 59,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  },
+  {
+   "round": 60,
+   "down_raw": 528296800,
+   "up_raw": 528296800,
+   "down_serialized": 528318880,
+   "up_serialized": 528318880,
+   "messages": 10
+  }
+ ],
+ "num_params": 6603710,
+ "num_sampled": 10,
+ "client_sizes": [
+  339,
+  345,
+  222,
+  349,
+  331,
+  312,
+  367,
+  355,
+  348,
+  343,
+  355,
+  365,
+  344,
+  383,
+  338,
+  365,
+  274,
+  219,
+  366,
+  345,
+  321,
+  334,
+  295,
+  272,
+  232,
+  214,
+  171,
+  214,
+  264,
+  340,
+  244,
+  252,
+  85,
+  232,
+  253,
+  117,
+  236,
+  143,
+  196,
+  320,
+  110,
+  132,
+  157,
+  128,
+  138,
+  148,
+  149,
+  134,
+  114,
+  134,
+  129,
+  116,
+  139,
+  144,
+  96,
+  139,
+  161,
+  146,
+  162,
+  162,
+  144,
+  154,
+  149,
+  153,
+  142,
+  156,
+  155,
+  159,
+  129,
+  143,
+  152,
+  138,
+  149,
+  159,
+  154,
+  125,
+  158,
+  153,
+  157,
+  164,
+  163,
+  159,
+  158,
+  141,
+  143,
+  161,
+  157,
+  164,
+  151,
+  134,
+  151,
+  138,
+  149,
+  112,
+  146,
+  133,
+  140,
+  160,
+  162,
+  142
+ ],
+ "wall_seconds": 147.78759098052979,
+ "eval_seconds": 0.0,
+ "evals": 7,
+ "device": "cuda (NVIDIA GeForce GTX 1650 Ti)",
+ "versions": {
+  "python": "3.13.3",
+  "torch": "2.11.0+cu128",
+  "flwr": "1.41.0",
+  "opacus": "1.6.0"
+ },
+ "update_norm": {
+  "median_per_round": [
+   0.8599906744433989,
+   1.0116648992706383,
+   1.3148139530750045,
+   1.0121233747465037,
+   1.0847271100153462,
+   1.1075168579392138,
+   0.9959756498897026,
+   0.9367581264329585,
+   1.1138032531529247,
+   1.0302401906459924,
+   1.034757613008794,
+   0.9856381876271907,
+   1.0571996901101968,
+   0.8805691154938267,
+   0.9958451184235115,
+   1.0565723248798666,
+   0.8542789584915957,
+   0.8066802633126973,
+   0.9839845812364826,
+   1.1170993252933092,
+   0.8840846865369476,
+   0.9265682275380427,
+   0.9041213510609758,
+   0.8982851962732137,
+   0.8567417491553664,
+   0.8735196928881207,
+   0.7628669391631585,
+   0.9480673733617537,
+   0.9977838873989302,
+   0.7751162029213312,
+   0.8903383889379641,
+   0.7710559742301069,
+   0.7936625067696532,
+   1.052425580603425,
+   0.9363725114211855,
+   0.8669891587142555,
+   0.89038835668408,
+   0.8256547730769139,
+   0.8771243606266717,
+   0.7431275885718694,
+   0.68600025319306,
+   0.8132091407963083,
+   0.9293044774649304,
+   0.8489958327863931,
+   0.6211332641498086,
+   0.8248392626262899,
+   0.7438496018041366,
+   0.6324787565679855,
+   0.8497023444716914,
+   0.711463967269077,
+   0.7672450848907695,
+   0.7086490688495611,
+   0.7123660480509896,
+   0.851022152675037,
+   0.8726866774471378,
+   0.8427788549170413,
+   0.8549085424579417,
+   0.7938124251809351,
+   0.9117911862304328,
+   0.6379231186679493
+  ],
+  "quantiles_10_50_90": [
+   0.570930218725456,
+   0.8923653491189253,
+   1.2691697676941498
+  ]
+ },
+ "data_seconds": 24.92086410522461
+}

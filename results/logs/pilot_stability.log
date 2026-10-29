@@ -1,0 +1,15 @@
+W1029 14:48:36.078000 21304 Lib\site-packages\torch\distributed\elastic\multiprocessing\redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+WARNING :   fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+10/29/2026 14:48:53:WARNING:fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+.venv\Lib\site-packages\torch\autograd\graph.py:869: UserWarning: avg_pool3d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\aten\src\ATen\Context.cpp:164.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+phase2_fullpart_scaffold-weighted_alpha0p1_lr0p03_r60_s0: [0.1, 0.375, 0.447, 0.516, 0.562, 0.591, 0.609, 0.626, 0.648, 0.65, 0.666, 0.685, 0.694] last3=0.6818 {} 499s
+WARNING :   fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+10/29/2026 14:57:16:WARNING:fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+phase2_fullpart_fedavg_alpha0p1_lr0p03_r60_s0: [0.1, 0.327, 0.415, 0.484, 0.531, 0.58, 0.597, 0.628, 0.634, 0.659, 0.665, 0.681, 0.693] last3=0.6796 {} 477s
+WARNING :   fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+10/29/2026 15:05:16:WARNING:fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+phase2_fullpart_scaffold-weighted_alpha0p1_lr0p02_r60_s0: [0.1, 0.354, 0.417, 0.475, 0.518, 0.565, 0.571, 0.597, 0.616, 0.619, 0.636, 0.644, 0.663] last3=0.6475 {} 497s
+WARNING :   fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+10/29/2026 15:13:36:WARNING:fraction_evaluate is set to 0.0. Federated evaluation will be skipped.
+phase2_fullpart_fedavg_alpha0p1_lr0p02_r60_s0: [0.1, 0.311, 0.387, 0.445, 0.495, 0.538, 0.556, 0.579, 0.59, 0.615, 0.622, 0.635, 0.651] last3=0.6360 {} 478s
