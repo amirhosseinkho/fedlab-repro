@@ -83,32 +83,33 @@ SCAFFOLD is a subclass of Flower's `FedAvg` (sampling and message construction
 inherited). Algorithm 1 averages the sampled clients with equal weights,
 `x += eta_g * mean_i(y_i - x)` and `c += (1/N) * sum_i delta c_i`. In the
 phase-2 check (CIFAR-10, alpha = 0.1, 100 clients, 10% sampled, E = 2, 60
-rounds, seed 0) that version ended below FedAvg (mean of the last three
-evaluations 0.321 vs 0.367). A full-participation diagnostic (10 clients,
-alpha = 0.1, E = 1, 30 rounds) separated the cause:
+rounds, lr 0.05, seed 0) that version ended below FedAvg. Last-3 accuracy,
+files in `results/phase_checks/`:
 
-| run (results/phase_checks/) | last-3 accuracy |
-|---|---|
-| FedAvg, size-weighted (Flower default) | 0.611 |
-| FedAvg, uniform weights | 0.543 |
-| SCAFFOLD, uniform (Algorithm 1 as written) | 0.444 |
-| SCAFFOLD, size-weighted x and c | 0.620 |
+| run | partial, 60 rounds, lr 0.05 | full participation, 30 rounds, lr 0.05 |
+|---|---|---|
+| FedAvg, size-weighted (Flower default) | 0.371 | 0.614 |
+| FedAvg, uniform weights | 0.357 | 0.549 |
+| FedProx, mu = 0.01 | 0.372 | not run |
+| SCAFFOLD, uniform (Algorithm 1 as written) | 0.337 | 0.442 |
+| SCAFFOLD, size-weighted x and c | 0.412 | diverged (0.613 at round 20, NaN by round 30) |
 
-The client sizes in that run range from 796 to 13,568, so the number of local
-steps K_i ranges from 16 to 272. Averaging equally weighted clients that take
-very different numbers of steps optimises a different objective than the
-size-weighted one that the balanced test set corresponds to, and the uniform
-control variate keeps pulling the clients towards it. The repo therefore uses
-weights p_i = n_i / n for both updates:
+The full-participation diagnostic uses 10 clients, alpha = 0.1, E = 1. Client
+sizes there range from 796 to 13,568, so the number of local steps K_i ranges
+from 16 to 272. Averaging equally weighted clients that take very different
+numbers of steps optimises a different objective than the size-weighted one
+that the balanced test set corresponds to, and the uniform control variate
+keeps pulling the clients towards it. The repo therefore uses weights
+p_i = n_i / n for both updates:
 `x += eta_g * sum_{i in S} (n_i / n_S) (y_i - x)` and
 `c += sum_{i in S} p_i * delta c_i`. With equal client sizes this is exactly
 Algorithm 1 (unit test `test_weighted_scaffold_equals_paper_for_equal_client_sizes`),
 and the hand-computed test checks the unweighted version against the paper's
-equations. With the weighted version the phase-2 check gave 0.384 vs FedAvg's
-0.367. The server needs the total number of training examples `n`; in this
+equations. The server needs the total number of training examples `n`; in this
 simulation it is known exactly. Option II is used for the client control
 variate, with `K` the actual number of local steps the client took;
-`eta_g = 1`.
+`eta_g = 1`. The divergence at lr 0.05 is the reason for the learning rate in
+D19.
 
 **D13. SCAFFOLD replies carry two ArrayRecords.** Flower's
 `validate_message_reply_consistency` requires exactly one ArrayRecord, so the
@@ -122,6 +123,24 @@ last three evaluations, to reduce the effect of a single noisy round.
 
 **D15. No learning-rate decay, no momentum, no weight decay.** Local training
 is plain minibatch SGD with a constant step size for every algorithm.
+
+**D19. Learning rate 0.03 on CIFAR-10, 0.05 on FEMNIST.** One constant lr
+per dataset, shared by all algorithms, chosen by pilots with seed 100 (not used
+by any reported run) and by SCAFFOLD's stability. CIFAR-10 FedAvg pilot
+(alpha = 0.5, E = 2, 30 rounds): lr 0.02 / 0.05 / 0.1 gave last-3 accuracy
+0.293 / 0.349 / 0.374. At lr 0.1 both SCAFFOLD variants reached NaN within 35
+rounds in the partial-participation check of D12 (FedAvg 0.402, FedProx 0.406);
+at lr 0.05 size-weighted SCAFFOLD diverged in the full-participation
+diagnostic. SCAFFOLD's analysis bounds the local step size by roughly
+1 / (K L eta_g), so a client with K = 272 steps is the binding one. Repeating
+the full-participation diagnostic for 60 rounds: lr 0.03 gave SCAFFOLD 0.682
+vs FedAvg 0.680, lr 0.02 gave 0.648 vs 0.636, both stable. lr 0.03 is the
+largest tested value at which SCAFFOLD did not diverge, so it is used for
+every CIFAR-10 run. The cost is that FedAvg is run below its best pilot lr;
+the README reports this. FEMNIST pilot (FedAvg, E = 2, 30 rounds): lr 0.05 /
+0.1 / 0.2 gave 0.681 / 0.708 / 0.692; FEMNIST client sizes vary much less, and
+lr 0.05 was kept after a 60-round SCAFFOLD pilot at that lr (see
+`femnist_scaffold_lr0p05_s100.json`).
 
 ## Privacy
 

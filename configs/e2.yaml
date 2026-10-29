@@ -11,7 +11,7 @@ base:
   rounds: 200
   local_epochs: 2
   batch_size: 50
-  lr: 0.1                # winner of the 30-round lr pilot on seed 100 (D19)
+  lr: 0.03               # D19: largest tested value at which SCAFFOLD did not diverge
   mu: 0.01
   eval_every: 5
   device: cuda
