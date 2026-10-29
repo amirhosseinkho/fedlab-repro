@@ -23,6 +23,9 @@ No epsilon is computed by hand anywhere in this repo.
 
 from __future__ import annotations
 
+import functools
+
+import numpy as np
 from flwr.supercore.privacy_accounting import (
     GaussianPrivacyEvent,
     NeighboringRelation,
@@ -31,17 +34,31 @@ from flwr.supercore.privacy_accounting import (
 )
 from flwr.supercore.privacy_accounting.rdp_accountant import RdpAccountant
 from opacus.accountants import RDPAccountant as OpacusRDP
+from opacus.accountants.analysis import rdp as opacus_rdp
 
 DELTA = 1e-5
 
 
 def sample_level_epsilon(history: list[tuple[float, float, int]], delta: float = DELTA) -> float:
-    """Epsilon of one client's DP-SGD history, from Opacus's RDP accountant."""
+    """Epsilon of one client's DP-SGD history, as Opacus's RDP accountant computes it.
+
+    Same arithmetic as ``opacus.accountants.RDPAccountant.get_privacy_spent``
+    (sum of ``compute_rdp`` over the history, then ``get_privacy_spent``), but
+    the RDP of one step is cached per (sample rate, noise multiplier): Opacus
+    recomputes it from scratch, which dominated the cost of DP-SGD runs.
+    """
     if not history:
         return 0.0
-    acc = OpacusRDP()
-    acc.history = [tuple(h) for h in history]
-    return float(acc.get_epsilon(delta=delta))
+    rdp = sum(_rdp_one_step(float(q), float(z)) * int(k) for z, q, k in history)
+    eps, _ = opacus_rdp.get_privacy_spent(orders=OpacusRDP.DEFAULT_ALPHAS, rdp=rdp, delta=delta)
+    return float(eps)
+
+
+@functools.cache
+def _rdp_one_step(q: float, noise_multiplier: float) -> np.ndarray:
+    return opacus_rdp.compute_rdp(
+        q=q, noise_multiplier=noise_multiplier, steps=1, orders=OpacusRDP.DEFAULT_ALPHAS
+    )
 
 
 def flower_accountant(
