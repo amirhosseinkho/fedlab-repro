@@ -1,0 +1,12 @@
+[1/12] cifar10__alpha1p0_algorithmfedavg s0: acc 0.6847 (last3 0.6842) 381s | elapsed 6.5 min
+[2/12] cifar10__alpha1p0_algorithmfedavg s1: acc 0.6792 (last3 0.6752) 393s | elapsed 13.1 min
+[3/12] cifar10__alpha1p0_algorithmfedavg s2: acc 0.6748 (last3 0.6645) 402s | elapsed 19.9 min
+[4/12] cifar10__alpha1p0_algorithmscaffold s0: acc 0.6920 (last3 0.6937) 447s | elapsed 27.4 min
+[5/12] cifar10__alpha1p0_algorithmscaffold s1: acc 0.6869 (last3 0.6859) 443s | elapsed 34.8 min
+[6/12] cifar10__alpha1p0_algorithmscaffold s2: acc 0.6836 (last3 0.6848) 451s | elapsed 42.4 min
+[7/12] cifar10__alpha100p0_algorithmfedavg s0: acc 0.7029 (last3 0.7007) 391s | elapsed 49.0 min
+[8/12] cifar10__alpha100p0_algorithmfedavg s1: acc 0.6973 (last3 0.6956) 378s | elapsed 55.3 min
+[9/12] cifar10__alpha100p0_algorithmfedavg s2: acc 0.6992 (last3 0.6930) 377s | elapsed 61.7 min
+[10/12] cifar10__alpha100p0_algorithmscaffold s0: acc 0.6995 (last3 0.6984) 432s | elapsed 68.9 min
+[11/12] cifar10__alpha100p0_algorithmscaffold s1: acc 0.7008 (last3 0.6991) 432s | elapsed 76.2 min
+[12/12] cifar10__alpha100p0_algorithmscaffold s2: acc 0.6976 (last3 0.6935) 431s | elapsed 83.4 min
