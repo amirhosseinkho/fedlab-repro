@@ -235,3 +235,24 @@ phase-1 acceptance check (>= 95% on the full MNIST test set in 5 rounds:
 `results/phase_checks/phase1_mnist_quick_fedavg_s0.json`). In quick mode the
 FEMNIST group of E1 is skipped (MNIST stands in for both datasets).
 Quick-mode numbers are smoke tests and never reported.
+
+**D26. Reduced E3 grid.** The 3-round timing of every configuration
+(`results/logs/pilot_timing.log`) projected 8.7 GPU-hours for seed 0 of E1, E2
+and E3, plus about 1-1.5 hours for the extra E3 seeds, against a budget of
+about 10 hours of which the pilots had used about 2.4. FedProx was dropped from
+E3's no-DP group (it sends the same bytes as FedAvg and matched it in E1), and
+central-DP noise z = 0.2 and 1.5 were dropped. The runs in `results/` took
+12.3 GPU-hours in the end, because the Pareto fronts contained 15 points (30
+extra runs).
+
+**D27. Divergence in the full runs.** Size-weighted SCAFFOLD at the shared lr
+became NaN in 6 of its 27 runs: CIFAR-10 alpha = 0.1 (seeds 0 and 1, rounds
+140 and 50), FEMNIST (all seeds, rounds 45-65; the 60-round pilot with seed
+100 stopped just before), and E3 with E = 1 and 20 clients per round (round
+80). Client weights for the control variate sum to one (FEMNIST: 100 writers,
+20,095 training samples), the unit tests pass, and the median client update
+norm stays at its usual level until one round in which it jumps by six orders
+of magnitude. Central DP also diverges when the noise on the average is large:
+z = 0.5 with 5 clients and z = 1.0 with 5 or 10 clients per round (noise
+standard deviation z * C / m per coordinate). Diverged runs are kept, counted
+in the means, and marked in every table (`experiments/aggregate.py`).
