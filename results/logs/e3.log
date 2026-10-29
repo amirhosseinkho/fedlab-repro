@@ -1,0 +1,40 @@
+[1/36] nodp__algorithmfedavg_local_epochs1_fraction0p05 s0: acc 0.3953 (last3 0.4184) 57s | elapsed 1.1 min
+[2/36] nodp__algorithmfedavg_local_epochs1_fraction0p1 s0: acc 0.4407 (last3 0.4467) 106s | elapsed 2.9 min
+[3/36] nodp__algorithmfedavg_local_epochs1_fraction0p2 s0: acc 0.4524 (last3 0.4537) 207s | elapsed 6.4 min
+[4/36] nodp__algorithmfedavg_local_epochs5_fraction0p05 s0: acc 0.6196 (last3 0.6472) 215s | elapsed 10.0 min
+[5/36] nodp__algorithmfedavg_local_epochs5_fraction0p1 s0: acc 0.6718 (last3 0.6716) 418s | elapsed 17.1 min
+[6/36] nodp__algorithmfedavg_local_epochs5_fraction0p2 s0: acc 0.6838 (last3 0.6786) 839s | elapsed 31.1 min
+[7/36] nodp__algorithmscaffold_local_epochs1_fraction0p05 s0: acc 0.4243 (last3 0.4498) 72s | elapsed 32.4 min
+[8/36] nodp__algorithmscaffold_local_epochs1_fraction0p1 s0: acc 0.4508 (last3 0.4611) 132s | elapsed 34.6 min
+[9/36] nodp__algorithmscaffold_local_epochs1_fraction0p2 s0: acc 0.1000 (last3 0.1000) 256s | elapsed 39.0 min
+[10/36] nodp__algorithmscaffold_local_epochs5_fraction0p05 s0: acc 0.6652 (last3 0.6771) 231s | elapsed 42.9 min
+[11/36] nodp__algorithmscaffold_local_epochs5_fraction0p1 s0: acc 0.6887 (last3 0.6905) 447s | elapsed 50.4 min
+[12/36] nodp__algorithmscaffold_local_epochs5_fraction0p2 s0: acc 0.7071 (last3 0.7013) 897s | elapsed 65.4 min
+[13/36] central__central_dp_noise0p0_fraction0p05 s0: acc 0.3809 (last3 0.4037) 66s | elapsed 66.5 min
+[14/36] central__central_dp_noise0p0_fraction0p1 s0: acc 0.4404 (last3 0.4354) 119s | elapsed 68.6 min
+[15/36] central__central_dp_noise0p0_fraction0p2 s0: acc 0.4473 (last3 0.4467) 225s | elapsed 72.4 min
+[16/36] central__central_dp_noise0p1_fraction0p05 s0: acc 0.3901 (last3 0.3971) 66s | elapsed 73.5 min
+[17/36] central__central_dp_noise0p1_fraction0p1 s0: acc 0.4469 (last3 0.4439) 118s | elapsed 75.5 min
+[18/36] central__central_dp_noise0p1_fraction0p2 s0: acc 0.4527 (last3 0.4518) 226s | elapsed 79.4 min
+[19/36] central__central_dp_noise0p3_fraction0p05 s0: acc 0.1439 (last3 0.1475) 66s | elapsed 80.5 min
+[20/36] central__central_dp_noise0p3_fraction0p1 s0: acc 0.3320 (last3 0.3294) 119s | elapsed 82.6 min
+[21/36] central__central_dp_noise0p3_fraction0p2 s0: acc 0.4554 (last3 0.4567) 225s | elapsed 86.4 min
+.venv\Lib\site-packages\numpy\linalg\_linalg.py:2767: RuntimeWarning: overflow encountered in dot
+  sqnorm = x.dot(x)
+[22/36] central__central_dp_noise0p5_fraction0p05 s0: acc 0.1000 (last3 0.1000) 67s | elapsed 87.5 min
+[23/36] central__central_dp_noise0p5_fraction0p1 s0: acc 0.2008 (last3 0.1980) 119s | elapsed 89.6 min
+[24/36] central__central_dp_noise0p5_fraction0p2 s0: acc 0.3806 (last3 0.3837) 226s | elapsed 93.4 min
+[25/36] central__central_dp_noise1p0_fraction0p05 s0: acc 0.1000 (last3 0.1000) 66s | elapsed 94.6 min
+[26/36] central__central_dp_noise1p0_fraction0p1 s0: acc 0.1000 (last3 0.1000) 118s | elapsed 96.6 min
+[27/36] central__central_dp_noise1p0_fraction0p2 s0: acc 0.2086 (last3 0.2106) 226s | elapsed 100.4 min
+.venv\Lib\site-packages\opacus\privacy_engine.py:98: UserWarning: Secure RNG turned off. This is perfectly fine for experimentation as it allows for much faster training performance, but remember to turn it on and retrain one last time before production with ``secure_mode`` turned on.
+<sys>:0: UserWarning: Full backward hook is firing when gradients are computed with respect to module outputs since no inputs require gradients. See https://docs.pytorch.org/docs/main/generated/torch.nn.Module.html#torch.nn.Module.register_full_backward_hook for more details.
+[28/36] dpsgd__dpsgd_noise0p5_fraction0p05 s0: acc 0.3348 (last3 0.3510) 129s | elapsed 102.6 min
+[29/36] dpsgd__dpsgd_noise0p5_fraction0p1 s0: acc 0.3731 (last3 0.3728) 243s | elapsed 106.7 min
+[30/36] dpsgd__dpsgd_noise0p5_fraction0p2 s0: acc 0.3866 (last3 0.3851) 483s | elapsed 114.9 min
+[31/36] dpsgd__dpsgd_noise1p0_fraction0p05 s0: acc 0.2341 (last3 0.2541) 129s | elapsed 117.1 min
+[32/36] dpsgd__dpsgd_noise1p0_fraction0p1 s0: acc 0.3317 (last3 0.3285) 244s | elapsed 121.2 min
+[33/36] dpsgd__dpsgd_noise1p0_fraction0p2 s0: acc 0.3645 (last3 0.3643) 483s | elapsed 129.3 min
+[34/36] dpsgd__dpsgd_noise1p5_fraction0p05 s0: acc 0.1628 (last3 0.1798) 128s | elapsed 131.5 min
+[35/36] dpsgd__dpsgd_noise1p5_fraction0p1 s0: acc 0.2347 (last3 0.2428) 243s | elapsed 135.6 min
+[36/36] dpsgd__dpsgd_noise1p5_fraction0p2 s0: acc 0.2975 (last3 0.2968) 483s | elapsed 143.7 min
