@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 import numpy as np
@@ -52,6 +53,8 @@ def load_runs(results: Path) -> pd.DataFrame:
                 "acc_last3": r["final_acc_last3"],
                 "acc_final": r["final_acc"],
                 "acc_best": max(x["acc"] for x in h),
+                # the training loss became NaN; the model then predicts one class
+                "diverged": any(math.isnan(x["loss"]) for x in h),
                 "bytes_total": r["total_bytes_raw"],
                 "bytes_up": last["bytes_up"],
                 "bytes_down": last["bytes_down"],
@@ -84,13 +87,22 @@ def summarise(df: pd.DataFrame) -> pd.DataFrame:
     out = g[metrics].mean(numeric_only=True)
     std = g[["acc_last3", "acc_final"]].std(ddof=1).add_suffix("_std")
     n = g.size().rename("n_seeds")
-    return pd.concat([out, std, n], axis=1).reset_index()
+    div = g["diverged"].sum().rename("n_diverged")
+    return pd.concat([out.drop(columns="diverged"), std, n, div], axis=1).reset_index()
 
 
 def pm(mean: float, std: float, n: int, scale: float = 100.0) -> str:
     if n < 2 or np.isnan(std):
         return f"{mean * scale:.1f}"
     return f"{mean * scale:.1f} ± {std * scale:.1f}"
+
+
+def cell(r) -> str:
+    """Accuracy cell; notes how many seeds diverged (NaN loss)."""
+    text = pm(r.acc_last3, r.acc_last3_std, r.n_seeds)
+    if r.n_diverged:
+        text += f" ({int(r.n_diverged)} of {int(r.n_seeds)} diverged)"
+    return text
 
 
 def mb(x: float | None) -> str:
@@ -115,9 +127,7 @@ def tables(s: pd.DataFrame) -> str:
         out.append("| dataset | partition | FedAvg | FedProx (mu=0.01) | SCAFFOLD | seeds |")
         out.append("|---|---|---|---|---|---|")
         for (ds, a), part in e1.groupby(["dataset", "alpha"], dropna=False):
-            cells = {
-                r.algorithm: pm(r.acc_last3, r.acc_last3_std, r.n_seeds) for r in part.itertuples()
-            }
+            cells = {r.algorithm: cell(r) for r in part.itertuples()}
             label = "writers (natural)" if ds == "femnist" else f"Dirichlet alpha={a:g}"
             out.append(
                 f"| {ds} | {label} | {cells.get('fedavg', 'not run')} | {cells.get('fedprox', 'not run')} "
@@ -142,8 +152,8 @@ def tables(s: pd.DataFrame) -> str:
                 else "-"
             )
             out.append(
-                f"| {a:g} | {pm(fa.acc_last3, fa.acc_last3_std, fa.n_seeds) if fa is not None else 'not run'} "
-                f"| {pm(sc.acc_last3, sc.acc_last3_std, sc.n_seeds) if sc is not None else 'not run'} | {diff} "
+                f"| {a:g} | {cell(fa) if fa is not None else 'not run'} "
+                f"| {cell(sc) if sc is not None else 'not run'} | {diff} "
                 f"| {int(part.n_seeds.min())} |"
             )
         out.append("")
@@ -159,7 +169,7 @@ def tables(s: pd.DataFrame) -> str:
         out.append("|---|---|---|---|---|---|---|---|")
         for r in nd.itertuples():
             out.append(
-                f"| {ALGO[r.algorithm]} | {r.local_epochs} | {int(r.num_sampled)} | {pm(r.acc_last3, r.acc_last3_std, r.n_seeds)} "
+                f"| {ALGO[r.algorithm]} | {r.local_epochs} | {int(r.num_sampled)} | {cell(r)} "
                 f"| {mb(r.bytes_total)} | {mb(r.bytes_to_40)} | {mb(r.bytes_to_50)} | {int(r.n_seeds)} |"
             )
         out.append("")
@@ -174,7 +184,7 @@ def tables(s: pd.DataFrame) -> str:
             out.append("|---|---|---|---|---|---|")
             for r in cd.itertuples():
                 out.append(
-                    f"| {int(r.num_sampled)} | {r.central_dp_noise:g} | {pm(r.acc_last3, r.acc_last3_std, r.n_seeds)} "
+                    f"| {int(r.num_sampled)} | {r.central_dp_noise:g} | {cell(r)} "
                     f"| {eps(r.eps_central_noamp)} | {eps(r.eps_central_poisson)} | {int(r.n_seeds)} |"
                 )
             out.append("")
@@ -189,7 +199,7 @@ def tables(s: pd.DataFrame) -> str:
             out.append("|---|---|---|---|---|---|")
             for r in dp.itertuples():
                 out.append(
-                    f"| {int(r.num_sampled)} | {r.dpsgd_noise:g} | {pm(r.acc_last3, r.acc_last3_std, r.n_seeds)} "
+                    f"| {int(r.num_sampled)} | {r.dpsgd_noise:g} | {cell(r)} "
                     f"| {eps(r.eps_sample_max)} | {eps(r.eps_sample_mean)} | {int(r.n_seeds)} |"
                 )
             out.append("")

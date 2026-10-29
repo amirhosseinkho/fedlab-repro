@@ -167,7 +167,7 @@ def e2_alpha(res: Path, out: Path) -> None:
 
 def _pareto(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     """Indices of points not dominated (smaller x, larger y), sorted by x."""
-    idx = np.argsort(x)
+    idx = np.lexsort((-y, x))  # by x, ties broken by larger y first
     front, best = [], -np.inf
     for i in idx:
         if y[i] > best:
@@ -207,7 +207,8 @@ def e3(res: Path, out: Path) -> None:
         label="Pareto front",
     )
     for algo in COLORS:
-        ax.scatter([], [], color=COLORS[algo], marker="o", s=60, label=NAMES[algo])
+        if (nd.algorithm == algo).any():
+            ax.scatter([], [], color=COLORS[algo], marker="o", s=60, label=NAMES[algo])
     for e, mk in markers.items():
         ax.scatter([], [], color=INK2, marker=mk, s=60, label=f"E={e}")
     ax.set_xscale("log")
@@ -265,7 +266,7 @@ def e3(res: Path, out: Path) -> None:
     ax.set_xlabel("epsilon at delta=1e-5 (log)")
     ax.set_ylabel("test accuracy (%)")
     ax.set_title(f"DP: accuracy vs privacy budget ({int(s.rounds.max())} rounds)", fontsize=10)
-    ax.legend(loc="center right", fontsize=8)
+    ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1.0), fontsize=8)
     _save(fig, "e3_tradeoff.png", out)
 
 
