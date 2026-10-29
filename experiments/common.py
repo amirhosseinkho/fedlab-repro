@@ -18,6 +18,7 @@ import itertools
 import json
 import sys
 import time
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -66,10 +67,16 @@ def parse_args(name: str) -> argparse.Namespace:
     )
     ap.add_argument("--only", default=None, help="run only names containing this substring")
     ap.add_argument("--device", default=None)
+    ap.add_argument(
+        "--front",
+        action="store_true",
+        help="run seeds 1 and 2 for the Pareto-front points of the seed-0 runs (E3)",
+    )
     return ap.parse_args()
 
 
-def main(name: str) -> None:
+def main(name: str, front: Callable[[Path], set[str]] | None = None) -> None:
+    """``front(out_dir)`` returns the run names on the Pareto fronts (E3 only)."""
     args = parse_args(name)
     spec = yaml.safe_load(Path(args.config).read_text(encoding="utf-8"))
     runs = expand(spec, args.quick)
@@ -81,6 +88,12 @@ def main(name: str) -> None:
     default_out = ROOT / "results" / ("quick" if args.quick else "") / name
     out_dir = Path(args.out_dir) if args.out_dir else default_out
     out_dir.mkdir(parents=True, exist_ok=True)
+    if args.front:
+        if front is None:
+            raise SystemExit(f"--front is not defined for {name}")
+        names = front(out_dir)
+        print("Pareto-front points:", ", ".join(sorted(names)), flush=True)
+        runs = [(n, c, [1, 2]) for n, c, _ in runs if n in names]
     if args.device:
         runs = [(n, {**c, "device": args.device}, s) for n, c, s in runs]
     if args.time_rounds:
