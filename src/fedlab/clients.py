@@ -237,6 +237,11 @@ def _train_dpsgd(
         }
     )
     y = OrderedDict((k, v.detach().clone()) for k, v in dp_model._module.state_dict().items())
+    # Free the per-sample gradients and Opacus's hooks now. Otherwise they stay
+    # reachable through reference cycles until the garbage collector runs, and
+    # GPU memory grows past the card's 4 GB within a few rounds (D22).
+    dp_opt.zero_grad(set_to_none=True)
+    dp_model._close()
     return y, steps, total / max(seen, 1), hist
 
 
