@@ -165,6 +165,27 @@ per-sample clipping. Each client's accountant history is saved in its
 all rounds it took part in. The Opacus noise generator is seeded per client and
 round. DP-SGD is combined with FedAvg only.
 
+**D20. DP hyperparameters.** Pilots with seed 100, CIFAR-10, alpha = 0.5,
+FedAvg, E = 1, 10 of 100 clients per round, 40 rounds, lr 0.03 (files
+`results/phase_checks/phase3_*`). Without DP the last-3 accuracy is 0.309.
+
+* Central clip C. The median L2 norm of a client update over 20 rounds is
+  0.32 at E = 1 (10th-90th percentile 0.25-0.39) and 0.56 at E = 5. C = 0.3,
+  about the E = 1 median, so roughly half the updates are clipped. An earlier
+  pilot at lr 0.05 used C = 0.5 and collapsed to about 13% at z = 0.5; its
+  files were discarded with the lr change.
+* Central noise z, with C = 0.3: z = 0 / 0.01 / 0.05 / 0.1 / 0.5 gave
+  0.304 / 0.303 / 0.305 / 0.311 / 0.221. Clipping alone costs nothing
+  measurable here; z = 0.5 costs about 9 points. E3 therefore adds z = 0.1,
+  0.2 and 0.3 to the planned grid {0, 0.5, 1.0, 1.5}.
+* DP-SGD lr. With per-sample clip 1.0 and lr 0.03, sigma = 0.5 / 1.0 / 1.5
+  all gave about 0.146 (0.146 / 0.145 / 0.146): the curves barely depend on
+  sigma, so the limit was the step size after clipping, not the noise. At
+  sigma = 1.0, lr 0.1 / 0.3 / 1.0 gave 0.195 / 0.275 / 0.136 (lr 1.0 rises
+  to 0.172 and then degrades). DP-SGD runs use lr 0.3; the other E3 runs keep
+  lr 0.03, so DP-SGD and non-DP points differ in lr as well as in privacy.
+* DP-SGD clip 1.0 and sigma in {0.5, 1.0, 1.5} are not tuned.
+
 ## Found while building
 
 **D21. Near-equal minibatches.** Local epochs are split into
@@ -187,7 +208,14 @@ Opacus's `UniformWithReplacementSampler` (each example independently with
 probability `sample_rate`, `int(1 / sample_rate)` batches per epoch) but on
 device tensors, which cut the cost of a DP-SGD round on CIFAR-10 from about
 11 s to about 3 s in development timing (not a file in `results/`). The epsilon of each client is computed from its accountant
-history at evaluation time (cached), not after every local update.
+history at evaluation time, not after every local update, and the RDP of one
+step is cached per (sample rate, noise multiplier); the result is identical to
+Opacus's `RDPAccountant` (`tests/test_privacy.py`). After each client update
+the per-sample gradients are freed and Opacus's hooks removed: before that
+fix, GPU memory reserved by PyTorch grew past the card's 4 GB within about 20
+rounds and DP-SGD rounds slowed from about 2.6 s to over 20 s. The fix does
+not change any computation; the wall times stored in the DP-SGD pilot files
+in `results/phase_checks/` predate it.
 
 **D23. GPU runs are not bitwise reproducible.** The CIFAR-10 model's
 `LocalResponseNorm` uses `avg_pool3d`, whose CUDA backward pass has no
