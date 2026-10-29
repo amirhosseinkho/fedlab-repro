@@ -56,7 +56,7 @@ run.
 | paper | their setting and number | ours | agrees? |
 |---|---|---|---|
 | FedAvg (McMahan et al. 2017, Table 3) | CIFAR-10, IID, 100 clients, C = 0.1, E = 5, B = 50, tuned lr decay, contrast/brightness/whitening: 80% after 280 rounds, 85% after 2,000 | alpha = 100 (near IID), E = 2, constant lr 0.03, no colour augmentation: 69.6 ± 0.4 after 200 rounds | No, 10+ points lower at 200 rounds (deviations below) |
-| FedAvg (same paper, Sec. 3) | more local computation per round (larger E) reduces the rounds needed | E3a: E = 5 vs E = 1 at equal bytes: +22 to +23 points after 100 rounds | Yes |
+| FedAvg (same paper) | more local computation per round (larger E) reduces the rounds needed | E3a: E = 5 vs E = 1 at equal bytes: +22 to +23 points after 100 rounds | Yes |
 | FedProx (Li et al. 2020) | without stragglers, FedProx with mu = 0 is FedAvg; mu is tuned over {0.001, 0.01, 0.1, 1} and helps mainly under systems heterogeneity | no stragglers, mu = 0.01 untuned: within 0.1 points of FedAvg in all three settings | Consistent |
 | SCAFFOLD (Karimireddy et al. 2020, Table 5) | EMNIST, 2-layer MLP, 5 epochs, 20% of clients per round, lr tuned per algorithm, best accuracy in 1k rounds: FedAvg 0.787 / SCAFFOLD 0.801 (0% similarity), 0.828 / 0.842 (10%) | CIFAR-10 CNN, shared lr: +0.7 (alpha = 0.5), +1.4 (alpha = 1), +0.1 (alpha = 100); diverged at alpha = 0.1 and on FEMNIST | Partly: same sign and size where stable; not stable under strong skew |
 
